@@ -21,6 +21,7 @@ class Product extends Model
         'Quantity', 
         'Sale_Price',
         'Category_ID',
+        'Full_Price',
     ];
 
     /**

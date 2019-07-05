@@ -19,8 +19,8 @@ class Products extends Migration
             $table->text('Description', 150);
             $table->string('Photo', 150);
             $table->integer('Quantity')->unsigned();
-            $table->integer('Full_Price')->nullable();
-            $table->integer('Sale_Price')->unsigned();
+            $table->integer('Full_Price')->unsigned();
+            $table->integer('Sale_Price')->nullable();
             $table->unsignedBigInteger('Category_ID');
             $table->timestamps();
 

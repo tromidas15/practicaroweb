@@ -40,6 +40,7 @@ class Category_Controller extends Controller
             request()->validate([
                 'Name'=>["required", "alpha_num" ,'min:3'],
             ]);
+
              Category::create([
                 'name' => request('Name'),
                 'parent_id' => request('Master_Category'),
@@ -49,10 +50,12 @@ class Category_Controller extends Controller
             request()->validate([
                 'Name'=>["required", "alpha_num" ,'min:3'],
             ]);
+
              Category::create([
                 'name' => request('Name'),
                 'parent_id' => 0,
             ]);
+
         }
         return redirect('/category');
 
@@ -78,13 +81,15 @@ class Category_Controller extends Controller
     public function edit($id)
     {
         $categorys = Category::findOrFail($id);
+
         $categorys_list= Category::get();
+
         if($categorys->parent_id !== 0){
             $id = $categorys->parent_id;
             $main= DB::table('categorys')->where('id', '=',  $id)->get();
             return view('actions.edit', compact('categorys', "categorys_list" , 'main'));
         }else{
-            return view('actions.edit', compact('categorys', "categorys_list" ));
+            return view('actions.edit', compact('categorys', "categorys_list"));
         }
         
     }
@@ -101,15 +106,21 @@ class Category_Controller extends Controller
         request()->validate([
             'Name'=>["required", "alpha_num" ,'min:3'],
         ]);
+
         $product =  Category::find($id);
+
         if(request()->has("Master_Category")){
-        $product->parent_id = request('Master_Category');
-        $product->Name = request('Name');  
+
+            $product->parent_id = request('Master_Category');
+            $product->Name = request('Name'); 
+
         }else{
-                  $product->Name = request('Name');  
+
+            $product->Name = request('Name');  
         }
 
         $product ->save();
+
         return redirect('/category');
     }
 
@@ -119,9 +130,34 @@ class Category_Controller extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    public function show_all_subcats_of_a_product($id)
+    {
+        $main = $id;
+        $all_subs = Category::get()->where("parent_id", "=", $id);
+        return view("actions.show_all_subs_off_main_category", compact("all_subs" , 'main'));
+    }
+
     public function destroy($id)
     {
-        Category::find($id)->delete();
-        return redirect('/category');
+        $check_if_main = Category::findOrFail($id);
+        if($check_if_main->parent_id !== 0)
+        {
+            Category::find($id)->delete();
+            return back();
+        }else{
+            $check_if_has_sub = DB::table('categorys')
+                                ->select('categorys.*')
+                                ->where("parent_id", "=", $id)
+                                ->get();
+            if(count($check_if_has_sub) > 0)
+            {
+                $main_category = $check_if_main->id;
+                return redirect('/category/show_sub/'.$main_category);
+            }else{
+                Category::find($id)->delete();
+                return back();
+            }
+        }
+        
     }
 }

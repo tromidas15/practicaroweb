@@ -20,26 +20,30 @@ class Add_Product extends Controller
 
     public function store(Request $request)
     {
+        //Validate
+        request()->validate([
+            'Name'=>["required", "alpha_num" ,'min:3'],
+            'Description'=>["required", 'min:10'],
+            'Quantity'=>["required", "numeric", 'min:1'],
+            'Full_Price'=>["required", "numeric", 'min:1'],
+            'Category'=>["required", "numeric", 'min:1'],
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:12048',
+        ]);
         //Upload Image
         $image = $request->file('image');
         $input['imagename']=time().".".$image->getClientOriginalExtension();
         $destinationPart=public_path('images/');
         $image->move($destinationPart, $input['imagename']);
-        request()->validate([
-            'Name'=>["required", "alpha_num" ,'min:3'],
-            'Description'=>["required", 'min:10'],
-            'Quantity'=>["required", "numeric", 'min:1'],
-            'Sale_Price'=>["required", "numeric", 'min:1'],
-            'Category'=>["required", "numeric", 'min:1'],
-        ]);
+        //Create
         Product::create([
             'Name' => request('Name'),
             'Description' =>request('Description'),
             'Quantity' => request('Quantity'),
-            'Sale_Price' => request('Sale_Price'),
+            'Full_Price' => request('Full_Price'),
             'Category_ID' => request('Category'),
             'Photo' => $input['imagename'],
         ]);
+        
         return redirect('/home');
     }
 }

@@ -17,7 +17,8 @@ class Category extends Model
     public $timestamps = true;
 
     public $fillable = [
-        'name' , 'parent_id'
+        'name' , 
+        'parent_id'
     ];
 
     /**

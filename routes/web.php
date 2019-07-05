@@ -20,9 +20,8 @@ Auth::routes();
 Route::middleware(['auth'])->group(function () {
    Route::resource('home', "HomeController");
    Route::resource('category', "Category_Controller");
-});
-
-Route::middleware(['auth'])->group(function () {
    Route::get('/add_products', "Add_Product@index");
    Route::post('/add_products', "Add_Product@store");
+   Route::get('/category/show_sub/{id}', "Category_Controller@show_all_subcats_of_a_product");
+   Route::delete("/category/clean_main/", "Category_Controller@delete_all_subs_from_main");
 });

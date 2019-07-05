@@ -18,6 +18,7 @@ class CreateCategoriesTable extends Migration
             $table->bigIncrements('id');
             $table->timestamps();
             $table->string('name', 150);
+            
             $table->integer('parent_id')->default(Category::MAIN_CATEGORY)->onDelete('restrict');
         });
     }

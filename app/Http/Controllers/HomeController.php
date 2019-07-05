@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use Illuminate\Support\Facades\DB;
 use App\Models\Category;
+use File;
 class HomeController extends Controller
 {
     /**
@@ -29,6 +30,7 @@ class HomeController extends Controller
             ->join('categorys', 'products.Category_ID', '=', 'categorys.id')
             ->select('products.*', 'categorys.name as Category')
             ->paginate(10);
+            
         return view('home')->with('products', $products);
     }
 
@@ -95,16 +97,18 @@ class HomeController extends Controller
             'Name'=>["required", "alpha_num" ,'min:3'],
             'Description'=>["required", 'min:10'],
             'Quantity'=>["required", "numeric", 'min:1'],
-            'Sale_Price'=>["required", "numeric", 'min:1'],
+            'Full_Price'=>["required", "numeric", 'min:1'],
             'Category'=>["required", "numeric", 'min:1'],
         ]);
+
         $product = Product::findOrFail($id);
         $product->Name = request('Name');
         $product->Description = request('Description');
         $product->Quantity = request('Quantity');
-        $product->Sale_Price = request('Sale_Price');
+        $product->Full_Price = request('Full_Price');
         $product->Category_ID = request('Category');
         $product ->save();
+
         return redirect('/home');
     }
 
@@ -116,6 +120,12 @@ class HomeController extends Controller
      */
     public function destroy($id)
     {
+        $image_path = Product::findOrFail($id);
+        foreach ($image_path as $image) {
+            $iamge_del = $image_path ->Photo;
+        }
+        $filepath = public_path()."/images/".$iamge_del;
+        File::delete($filepath);
         Product::find($id)->delete();
         return redirect('/home');
 

@@ -18,6 +18,7 @@ class CreatePasswordResetsTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->string('code', 191);
             $table->timestamp('created_at');
+            
             $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');
         });
     }

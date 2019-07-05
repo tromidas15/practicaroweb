@@ -29,10 +29,10 @@
 				</div>
 				<div class="form-group">
 		    		<label for="Price">Price:</label>
-					<input class="form-control" id='Price' name="Sale_Price" type="text" placeholder="Default input" required>
+					<input class="form-control" id='Price' name="Full_Price" type="text" placeholder="Default input" required>
 				</div>
-					@if($errors->has('Sale_Price'))
-						@error('Sale_Price')
+					@if($errors->has('Full_Price'))
+						@error('Full_Price')
 		    				<div class="alert alert-danger">{{ $message }}</div>
 						@enderror
 					@endif
